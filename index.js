@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cookiesParser = require("cookie-parser");
+var cookies = require("cookie-parser");
 
 const app = express();
 // middleware
@@ -8,6 +9,7 @@ const app = express();
 app.use(express.json());
 app.use(cookiesParser());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookies());
 
 // database connection
 
