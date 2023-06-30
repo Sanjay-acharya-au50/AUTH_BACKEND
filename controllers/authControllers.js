@@ -93,7 +93,8 @@ const loginUser = async (req, res) => {
 
 const getProfile = async (req, res) => {
   const { newtoken } = req.cookies;
-  // console.log("token from ", newtoken);
+
+  console.log("token from ", newtoken);
 
  const jwtVerify = await jwt.verify(newtoken, "mySecretKey" );
   res.json(jwtVerify);
