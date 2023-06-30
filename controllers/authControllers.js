@@ -9,27 +9,29 @@ const test = (req, res) => {
 
 // Register
 const registerUser = async (req, res) => {
+  const { name, email, password, profession } = req.body;
+
   try {
-    const { name, email, password, profession } = req.body;
     // name check
     if (!name || !email || !password || !profession) {
       return res.json({ error: "Empty field" });
     }
     // password check
-    if (!password || password < 6) {
+    else if (password < 6) {
       return res.json({
         error: "Password is required and it shold b more thn 6 char length",
       });
     }
 
+    const exist = await User.findOne({ email });
+     if (exist) {
+      return res.json({ error: "Email already taken" });
+    }
+
+
     const salt = await bcrypt.genSalt(10);
     let hashed_password = await bcrypt.hash(password.toString(), salt);
     // email check
-
-    const exist = await User.findOne({ email });
-    if (exist) {
-      return res.json({ error: "Email already taken" });
-    }
 
     const user = await User.create({
       name,
@@ -45,8 +47,9 @@ const registerUser = async (req, res) => {
 
 // Login
 const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
   try {
-    const { email, password } = req.body;
 
     if (!email || !password) {
       return res.json({ error: "Empty field" });
@@ -58,10 +61,6 @@ const loginUser = async (req, res) => {
     if (!user) {
       return res.json({ error: "You are not registered" });
     }
-
-    // console.log("req pass:",password);
-    // console.log("db pass:",user.password);
-    // //////////
     let db_password = user.password;
     //matching password
     const isValid = await bcrypt.compare(password.toString(), db_password);
@@ -75,36 +74,30 @@ const loginUser = async (req, res) => {
     //generate token
     // const token_to_send = jwt.sign({ id: user._id }, "mySecretKey", { expiresIn: '1h' })
 
-    jwt.sign({ id: user._id , name:user.name , profession:user.profession }, "mySecretKey", {}, (err, token) => {
-      if (err) throw err;
-      return res.cookie("newtoken", token).json(user);
-      // console.log("toekn:",token);
-    });
+    const jwtSign = await jwt.sign({ id: user._id , name:user.name , profession:user.profession }, "mySecretKey");
+    res.cookie("newtoken",jwtSign, {
+      secure: true,
+      // httpOnly: true,
+    } );
 
-    // res.cookie('token', token_to_send).json(user)
-
-    /////////////////////////////////////////////////////////////////////////////////////////
-
+    res.json(jwtSign)
+    console.log(jwtSign,"h=jwt")
     // ---------------
   } catch (error) {
     console.log(error);
   }
   // ----------------
 };
+// app.use(cookiesParser());
+// app.use(express.urlencoded({extended:false}))
 
-const getProfile =  (req, res) => {
+const getProfile = async (req, res) => {
   const { newtoken } = req.cookies;
-  console.log("token from verify", newtoken);
+  // console.log("token from ", newtoken);
 
-jwt.verify(newtoken, "mySecretKey", {},  (err, index) => {
-    if (err) throw err;
-    //  console.log("index:" , index.id)
-    //  let newId = index.id;
-    //  const userDetail = await User.findById({_id: newId})
-    //  console.log(userDetail)
-    return res.json(index)
-  });
-
+ const jwtVerify = await jwt.verify(newtoken, "mySecretKey" );
+  res.json(jwtVerify);
+  console.log("verify:",jwtVerify);
 };
 
 

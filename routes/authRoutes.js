@@ -10,6 +10,7 @@ router.use(cors({
     credentials:true,
     origin:"http://localhost:5173"
 }))
+
 // http://localhost
 
 router.get("/", test);
@@ -19,6 +20,8 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 
 router.get("/profile", getProfile)
+
+  
 
 router.post("/logout", logout)
 
