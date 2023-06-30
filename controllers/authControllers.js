@@ -91,10 +91,10 @@ const loginUser = async (req, res) => {
 // app.use(cookiesParser());
 // app.use(express.urlencoded({extended:false}))
 
-const getProfile = async (req, res) => {
+const getProfile = (req, res) => {
   const { newtoken } = req.cookies;
   try {
-    const jwtVerify = await jwt.verify(newtoken, "mySecretKey" );
+    const jwtVerify = jwt.verify(newtoken, "mySecretKey" );
      res.json(jwtVerify);
      console.log("verify:",jwtVerify);
     
