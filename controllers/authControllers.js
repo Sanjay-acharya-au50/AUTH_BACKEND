@@ -93,12 +93,16 @@ const loginUser = async (req, res) => {
 
 const getProfile = async (req, res) => {
   const { newtoken } = req.cookies;
+  try {
+    const jwtVerify = await jwt.verify(newtoken, "mySecretKey" );
+     res.json(jwtVerify);
+     console.log("verify:",jwtVerify);
+    
+  } catch (error) {
+  console.log("token from eroor: ", error);
+    
+  }
 
-  console.log("token from ", newtoken);
-
- const jwtVerify = await jwt.verify(newtoken, "mySecretKey" );
-  res.json(jwtVerify);
-  console.log("verify:",jwtVerify);
 };
 
 
