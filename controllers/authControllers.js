@@ -81,7 +81,7 @@ const loginUser = async (req, res) => {
     } );
 
     res.json(jwtSign)
-    console.log(jwtSign,"h=jwt")
+    console.log(jwtSign,"jwtSign line 84")
     // ---------------
   } catch (error) {
     console.log(error);
