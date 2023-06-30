@@ -77,6 +77,8 @@ const loginUser = async (req, res) => {
     const jwtSign = await jwt.sign({ id: user._id , name:user.name , profession:user.profession }, "mySecretKey");
     res.cookie("newtoken",jwtSign, {
       secure: true,
+      sameSite: 'strict'
+
       // httpOnly: true,
     } );
 

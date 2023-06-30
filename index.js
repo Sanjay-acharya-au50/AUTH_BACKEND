@@ -1,7 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cookiesParser = require("cookie-parser");
-var cookies = require("cookie-parser");
+const cors= require("cors")
+
 
 const app = express();
 // middleware
@@ -9,7 +10,12 @@ const app = express();
 app.use(express.json());
 app.use(cookiesParser());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookies());
+
+
+app.use(cors({
+  credentials:true,
+  origin:"http://localhost:5173"
+}))
 
 // database connection
 
