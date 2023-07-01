@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cookiesParser = require("cookie-parser");
 const cors= require("cors")
-
+const bodyParser = require("body-parser");
 
 const app = express();
 // middleware
@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 app.use(cookiesParser());
 app.use(express.urlencoded({ extended: false }));
-
+app.use(bodyParser.json())
 
 app.use(cors({
   credentials:true,
