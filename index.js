@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cookiesParser = require("cookie-parser");
 const cors= require("cors")
-const bodyParser = require("body-parser");
+const dotenv = require("dotenv").config()
 
 const app = express();
 // middleware
@@ -10,18 +10,18 @@ const app = express();
 app.use(express.json());
 app.use(cookiesParser());
 app.use(express.urlencoded({ extended: false }));
-app.use(bodyParser.json())
 
+// https://sanjay-mern-authentication.vercel.app
 app.use(cors({
   credentials:true,
-  origin:"https://sanjay-mern-authentication.vercel.app"
+  origin:"http://localhost:5173"
 }))
 
 // database connection
-
+const DB = process.env.MONGO_KEY
 mongoose
   .connect(
-    "mongodb+srv://sanjayacharya992:san123@cluster0.mxxhhgc.mongodb.net/myDB"
+    DB
   )
   .then(() => console.log("Data Base connected"))
   .catch((err) => console.log("DataBase failed", err));

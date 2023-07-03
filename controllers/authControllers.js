@@ -74,14 +74,11 @@ const loginUser = async (req, res) => {
     //generate token
     // const token_to_send = jwt.sign({ id: user._id }, "mySecretKey", { expiresIn: '1h' })
 
-    const jwtSign = await jwt.sign({ id: user._id , name:user.name , profession:user.profession }, "mySecretKey");
-    res.cookie("newtoken",jwtSign, {
-      secure: true,
-      httpOnly: true,
-    } );
+    const jwtSign = await jwt.sign({ id: user._id , name:user.name , profession:user.profession }, process.env.JWT_KEY);
+    res.cookie("newtoken",jwtSign);
 
-    res.json(jwtSign)
-    console.log(jwtSign,"jwtSign line 84")
+      return res.status(219).json({id:user._id, email})
+    // console.log(jwtSign,"jwtSign line 84")
     // ---------------
   } catch (error) {
     console.log(error);
@@ -95,12 +92,12 @@ const getProfile = (req, res) => {
   const { newtoken } = req.cookies;
   console.log("req:",req.cookies);
   try {
-    const jwtVerify = jwt.verify(newtoken, "mySecretKey" );
-     res.json(jwtVerify);
+    const jwtVerify = jwt.verify(newtoken, process.env.JWT_KEY );
+     res.status(220).json(jwtVerify);
      console.log("verify:",jwtVerify);
     
   } catch (error) {
-  console.log("token from eroor: ", error);
+  return console.log("token from eroor: ", error);
     
   }
 
@@ -108,7 +105,9 @@ const getProfile = (req, res) => {
 
 
 const logout = (req,res)=> {
-    res.clearCookie('newtoken').json({message:"logout suc"})
+    console.log("logout")
+    
+    return res.clearCookie('newtoken').json("logout suc")
 }
 
 module.exports = {
